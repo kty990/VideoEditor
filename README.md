@@ -28,4 +28,4 @@ If you find a bug or have a feature request, please open an issue on GitHub.
 
 ## License
 
-This program is released under the MIT License. See the LICENSE file for more information.
+This program is released under the MIT License. See the [LICENSE](https://github.com/kty990/VideoEditor/blob/main/LICENSE) file for more information.
