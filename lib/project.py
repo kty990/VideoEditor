@@ -5,14 +5,17 @@ class Project:
         if project_name == "":
             raise Exception("Can't open 'None' project.")
         self.name = project_name
+        self.tracks = [] #Type = playback.VideoTrack
+        self.splintered_renders = [] #Type = splinter.SplinterFunction
+
 
     def __repr__(self):
         return f"<< Project >>\nName: {self.name}"
 
     """
-    Opens a project
+    Reads a project
     """
-    def open(self):
+    def read(self):
         pass
 
     """
@@ -24,5 +27,7 @@ class Project:
     """
     Closes a project
     """
-    def close(self):
-        pass
+    def close(self, save):
+        if save:
+            #Save before closing
+            pass

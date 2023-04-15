@@ -103,7 +103,7 @@ class VideoExerpt:
         pass
 
     def run(self):
-        self.splinter_function.run()
+        self.splinter_function.run(self.tracks)
 
     def save_splintered_render(self):
         assert(isinstance(self.splintered_render, splinter.SplinteredRender), f"Expected type 'splinter.SplinteredRender', got {type(self.splintered_render)}")
