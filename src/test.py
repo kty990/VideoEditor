@@ -47,7 +47,8 @@ class App:
             cwd = os.getcwd()
             file_path = os.path.join(cwd, 'temp_file.wav')
             print(file_path)
-            temp_file = tempfile.NamedTemporaryFile(suffix='.wav', delete=False, dir=self.temp_dir.name)
+            #suffix="", delete=True, dir="./", subdir: str=None
+            temp_file = tempfile.NamedTemporaryFile(suffix='.wav', delete=False, dir='./', subdir=self.temp_dir.folder_name)
             if ret:
                 # Convert the frame to PIL format
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -55,10 +56,11 @@ class App:
                 self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
 
             # Play the audio
-            play(self.audio)
+            # play(self.audio)
 
         # Remove the temporary file outside the lock to avoid blocking the audio playback thread
-        os.unlink(temp_file.name)
+        print(temp_file.GetAbsDirectory())
+        os.unlink(temp_file.GetAbsDirectory())
 
         # Schedule the next update after the delay
         self.window.after(self.delay, self.update)
