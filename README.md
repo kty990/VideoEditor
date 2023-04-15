@@ -15,7 +15,7 @@ This program has the following dependencies:
 
 To use this program as a standalone executable, run this: `pip install pyinstaller` *(if you haven't already)* and then navigate to a local directory containing this program's code and run this: `pyinstaller --onefile ./src/index.py`
 
-To use this program without creating a standalone executable, simply run `src/index.py`
+To use this program without creating a standalone executable, simply run `python ./src/index.py` in your terminal, or run the file located in `VideoEditor > src > index.py`
 
 ## How it works
 
