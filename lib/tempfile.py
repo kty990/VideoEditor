@@ -7,6 +7,7 @@ existing_temp_directories = []
 existing_temp_files = []
 
 def mass_cleanup():
+    print("Mass cleanup")
     for x in existing_temp_directories:
         try:
             shutil.rmtree(x['abs_path'])

@@ -45,7 +45,7 @@ class App:
             t.start()
 
         # After it is called once, the update method will be automatically called every delay milliseconds
-        self.delay = int(round((1 / self.fps)*1000)*1.5)
+        self.delay = int(round((1 / self.fps)*1000)*1.51)
         print(f"DELAY: {self.delay}")
         self.update()
 
