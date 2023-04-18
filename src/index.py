@@ -7,7 +7,7 @@ parent_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 # Add the parent directory to the system path
 sys.path.append(parent_dir)
 
-from lib import display, project
+from lib import display, project, preview
 
 def file_open():
     global proj
@@ -24,6 +24,8 @@ def file_open():
 display.open_file = file_open
 app = display.Application()
 
+pWindow = preview.PreviewWindow(app,"")
+app.SetFrame(2, pWindow.canvas)
 
 proj = None
 file_open()

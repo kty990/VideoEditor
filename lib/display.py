@@ -8,6 +8,7 @@ FILE_TYPES = [
     ("mp4", f"*.mp4")
 ]
 
+#This is empty for a reason
 def open_file():
     pass
 
@@ -35,42 +36,42 @@ class Application(tk.Tk):
             self.geometry("1000x750")
 
             # Create the top level frames
-            frame_top = tk.Frame(self, bg='black')
-            frame_top.pack(side='top', fill='both', expand=True)
+            self.frame_top = tk.Frame(self, bg='black')
+            self.frame_top.pack(side='top', fill='both', expand=True)
 
-            frame1 = tk.Frame(frame_top, bg='white', bd=2, relief='groove')
-            frame1.pack(side='left', fill='both', expand=True)
-            label1 = tk.Label(frame1, text='Frame 1', font=('Arial', 16), fg='black')
+            self.frame1 = tk.Frame(self.frame_top, bg='white', bd=2, relief='groove')
+            self.frame1.pack(side='left', fill='both', expand=True)
+            label1 = tk.Label(self.frame1, text='Frame 1', font=('Arial', 16), fg='black')
             label1.pack(pady=10)
 
-            frame2 = tk.Frame(frame_top, bg='white', bd=2, relief='groove')
-            frame2.pack(side='left', fill='both', expand=True)
-            label2 = tk.Label(frame2, text='Frame 2', font=('Arial', 16), fg='black')
+            self.frame2 = tk.Frame(self.frame_top, bg='white', bd=2, relief='groove')
+            self.frame2.pack(side='left', fill='both', expand=True)
+            label2 = tk.Label(self.frame2, text='Frame 2', font=('Arial', 16), fg='black')
             label2.pack(pady=10)
 
-            frame3 = tk.Frame(frame_top, bg='white', bd=2, relief='groove')
-            frame3.pack(side='left', fill='both', expand=True)
-            label3 = tk.Label(frame3, text='Frame 3', font=('Arial', 16), fg='black')
+            self.frame3 = tk.Frame(self.frame_top, bg='white', bd=2, relief='groove')
+            self.frame3.pack(side='left', fill='both', expand=True)
+            label3 = tk.Label(self.frame3, text='Frame 3', font=('Arial', 16), fg='black')
             label3.pack(pady=10)
 
             # Create the bottom level frame
-            frame_bottom = tk.Frame(self, bg='black', bd=2, relief='groove')
-            frame_bottom.pack(side='bottom', fill='both', expand=True)
+            self.frame_bottom = tk.Frame(self, bg='black', bd=2, relief='groove')
+            self.frame_bottom.pack(side='bottom', fill='both', expand=True)
 
             # Create the nested frames in the bottom level frame
-            frame4 = tk.Frame(frame_bottom, bg='white')
-            frame4.pack(side='top', fill='both', expand=True)
-            label4 = tk.Label(frame4, text='Frame 4', font=('Arial', 16), fg='black')
+            self.frame4 = tk.Frame(self.frame_bottom, bg='white')
+            self.frame4.pack(side='top', fill='both', expand=True)
+            label4 = tk.Label(self.rame4, text='Frame 4', font=('Arial', 16), fg='black')
             label4.pack(pady=10)
 
-            frame5 = tk.Frame(frame_bottom, bg='white', bd=2, relief='groove')
-            frame5.pack(side='top', fill='both', expand=True)
-            label5 = tk.Label(frame5, text='Frame 5', font=('Arial', 16), fg='black')
+            self.frame5 = tk.Frame(self.frame_bottom, bg='white', bd=2, relief='groove')
+            self.frame5.pack(side='top', fill='both', expand=True)
+            label5 = tk.Label(self.frame5, text='Frame 5', font=('Arial', 16), fg='black')
             label5.pack(pady=10)
 
-            frame6 = tk.Frame(frame_bottom, bg='white')
-            frame6.pack(side='top', fill='both', expand=True)
-            label6 = tk.Label(frame6, text='Frame 6', font=('Arial', 16), fg='black')
+            self.frame6 = tk.Frame(self.frame_bottom, bg='white')
+            self.frame6.pack(side='top', fill='both', expand=True)
+            label6 = tk.Label(self.frame6, text='Frame 6', font=('Arial', 16), fg='black')
             label6.pack(pady=10)
 
 
@@ -112,14 +113,14 @@ class Application(tk.Tk):
                     frame6_height = current_height / 6
 
                     # Update the frame configurations
-                    frame_top.configure(width=current_width, height=current_height / 2)
-                    frame_bottom.configure(width=current_width, height=current_height / 2)
-                    frame1.configure(width=frame1_width, height=frame1_height)
-                    frame2.configure(width=frame2_width, height=frame2_height)
-                    frame3.configure(width=frame3_width, height=frame3_height)
-                    frame4.configure(height=frame4_height)
-                    frame5.configure(height=frame5_height)
-                    frame6.configure(height=frame6_height)
+                    self.frame_top.configure(width=current_width, height=current_height / 2)
+                    self.frame_bottom.configure(width=current_width, height=current_height / 2)
+                    self.frame1.configure(width=frame1_width, height=frame1_height)
+                    self.frame2.configure(width=frame2_width, height=frame2_height)
+                    self.frame3.configure(width=frame3_width, height=frame3_height)
+                    self.frame4.configure(height=frame4_height)
+                    self.frame5.configure(height=frame5_height)
+                    self.frame6.configure(height=frame6_height)
 
                     # Update the label font size
                     label_font_size = int(frame1_width / 20)
@@ -148,3 +149,35 @@ class Application(tk.Tk):
         tmp = filedialog.askopenfilename(initialdir="/", title="Select file",
                                           filetypes=(FILE_TYPES))
         return tmp
+    
+    """
+    frame - Which frame in the GUI should be updated, in order 1-3 TL -> TR
+            followed by 4-6 in order MID -> BOTTOM
+    """
+    def SetFrame(self, frame: int = 1, new_frame: tk.Widget = None):
+        if not isinstance(new_frame, tk.Widget):
+            raise TypeError(f"Expected type 'tkinter.Widget', got {type(new_frame)}")
+        if not 1 <= frame <= 6:
+            raise ValueError(f"Expected frame between 1 and 6, got {frame}")
+        
+        if frame == 1:
+            self.frame1 = new_frame
+            self.frame1.pack(side='left', fill='both', expand=True)
+        elif frame == 2:
+            self.frame2 = new_frame
+            self.frame2.pack(side='left', fill='both', expand=True)
+        elif frame == 3:
+            self.frame3 = new_frame
+            self.frame3.pack(side='left', fill='both', expand=True)
+        elif frame == 4:
+            self.frame4 = new_frame
+            self.frame4.pack(side='top', fill='both', expand=True)
+        elif frame == 5:
+            self.frame5 = new_frame
+            self.frame5.pack(side='top', fill='both', expand=True)
+        elif frame == 6:
+            self.frame6 = new_frame
+            self.frame6.pack(side='top', fill='both', expand=True)
+        
+
+
