@@ -1,21 +1,31 @@
 import cv2
-import tkinter as tk
 import os
-from PIL import Image, ImageTk
+from PIL import Image, ImageQt
+
+from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtCore import QUrl, Qt
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+
 from pydub import AudioSegment
 from pydub.playback import play
 import threading
 from lib import tempfile
 
 class PreviewWindow:
-    def __init__(self, window, video_source: str = None):
-        self.window = window
+    def __init__(self, video_source: str = None):
+        # Create the main application window
+        self.app = QtWidgets.QApplication([])
+        self.window = QtWidgets.QMainWindow()
+        self.window.resize(800, 600)
+        self.window.setWindowTitle("Preview Window")
+
+        # Create a widget to contain the video canvas
+        self.central_widget = QtWidgets.QWidget()
+        self.window.setCentralWidget(self.central_widget)
 
         # Create a canvas that can fit the above video source size
-        self.canvas = tk.Canvas(window) #self.canvas = tk.Canvas(window, width=self.vid.get(cv2.CAP_PROP_FRAME_WIDTH), height=self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        # THIS HAS TO BE SET TO A DEFAULT SIZE FOR NOW, HANDLE A RESIZE BASED ON THE WINDOW SIZE WITH CORRECT DIMENSIONS
-        # SET THE CANVAS PARENT TO A FRAME TO ALLOW FOR MANIPULATION OF THE CANVAS (ie. resizing, moving around the canvas, etc.)
-        self.canvas.grid(row=0, column=1, sticky="nsew")
+        self.canvas = QtWidgets.QLabel(self.central_widget)
+        self.canvas.resize(800, 600)
 
         self.video_source = video_source
         self.current_playback = None
@@ -38,8 +48,6 @@ class PreviewWindow:
         # Open audio source
         self.audio = AudioSegment.from_file(self.video_source, format="mp4")
         
-
-
         def foo():
             temp_file = tempfile.NamedTemporaryFile(suffix='.wav', delete=False, dir='./', subdir=self.temp_dir.folder_name)
             # Start a new thread to play the audio
@@ -53,20 +61,19 @@ class PreviewWindow:
 
         foo()
         self.window.after(2*1000, self.update)
-        self.window.mainloop()
-
+        self.window.show()
+        self.app.exec_()
 
     def update(self):
         # Get a frame from the video source
         ret, frame = self.vid.read()
         with self.lock:
-            
-            
             if ret:
-                # Convert the frame to PIL format
+                # Convert the frame to QImage format
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
-                self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
+                qimage = ImageQt.ImageQt(Image.fromarray(frame))
+                pixmap = QtGui.QPixmap.fromImage(qimage)
+                self.canvas.setPixmap(pixmap)
 
         # Schedule the next update after the delay
         self.window.after(self.delay, self.update)
@@ -89,13 +96,20 @@ class PreviewWindow:
         os.unlink(temp_file_name)
 
     def set_volume(self, volume: float = 1.0):
-        if self.current_playback is not None:
-            self.current_playback.set_volume(volume)
-
+        self.media_player.setVolume(int(volume * 100))
+        
     def pause_audio(self):
-        if self.current_playback is not None:
-            self.current_playback.pause()
-
+        if self.media_player.state() == QMediaPlayer.PlayingState:
+            self.media_player.pause()
+        
     def stop_audio(self):
-        if self.current_playback is not None:
-            self.current_playback.stop()
+        self.media_player.stop()
+        
+    def mediaStateChanged(self, state):
+        # Handle the media player state change
+        if state == QMediaPlayer.StoppedState:
+            self.media_player.setPosition(0)
+        elif state == QMediaPlayer.PausedState:
+            self.timer.stop()
+        elif state == QMediaPlayer.PlayingState:
+            self.timer.start(self.delay)
