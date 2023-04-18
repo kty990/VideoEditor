@@ -1,4 +1,6 @@
 PROJECT_FILETYPE = ".vproj"
+from lib.event import Event
+
 
 class Project:
     def __init__(self, project_name: str = None):
@@ -8,14 +10,18 @@ class Project:
         self.tracks = [] #Type = playback.VideoTrack
         self.splintered_renders = [] #Type = splinter.SplinterFunction
 
+        
+
 
     def __repr__(self):
         return f"<< Project >>\nName: {self.name}"
 
+
+
     """
     Reads a project
     """
-    def read(self):
+    def read_track(self):
         pass
 
     """
@@ -27,7 +33,5 @@ class Project:
     """
     Closes a project
     """
-    def close(self, save):
-        if save:
-            #Save before closing
-            pass
+    def delete_track(self, track):
+        pass

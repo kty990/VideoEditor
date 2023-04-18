@@ -8,16 +8,14 @@ import threading
 from lib import tempfile
 
 class PreviewWindow:
-    def __init__(self, window: tk.Tk, window_title: str = None, video_source: str = None):
+    def __init__(self, window, video_source: str = None):
         self.window = window
-        self.window.protocol("VM_DELETE_WINDOW",tempfile.mass_cleanup)
-        self.window.title(window_title)
 
         # Create a canvas that can fit the above video source size
-        self.canvas = tk.Canvas(window, width=1000, height=750) #self.canvas = tk.Canvas(window, width=self.vid.get(cv2.CAP_PROP_FRAME_WIDTH), height=self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.canvas = tk.Canvas(window) #self.canvas = tk.Canvas(window, width=self.vid.get(cv2.CAP_PROP_FRAME_WIDTH), height=self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
         # THIS HAS TO BE SET TO A DEFAULT SIZE FOR NOW, HANDLE A RESIZE BASED ON THE WINDOW SIZE WITH CORRECT DIMENSIONS
         # SET THE CANVAS PARENT TO A FRAME TO ALLOW FOR MANIPULATION OF THE CANVAS (ie. resizing, moving around the canvas, etc.)
-        self.canvas.grid(row=0, column=0, padx=5, pady=5)
+        self.canvas.grid(row=0, column=1, sticky="nsew")
 
         self.video_source = video_source
         self.current_playback = None
