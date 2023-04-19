@@ -1,7 +1,8 @@
-import pickle
+from PyQt5.QtWidgets import QSplitter, QWidget
+from PyQt5.QtGui import QPainter, QPen, QColor
 
-from lib import splinter
-from lib.splinter import SplinterFunction
+# from lib import splinter
+# from lib.splinter import SplinterFunction
 
 class Time:
     def __init__(self, seconds: int = None, minutes: int = None, hours: int = None):
@@ -18,8 +19,10 @@ class VideoNode:
         self.start_time = Time(0,0,0)
         self.duration = Time(0,0,0)
 
-class VideoTrack:
-    def __init__(self, track_number: int = 1):
+class VideoTrack(QWidget):
+    def __init__(self, parent=None, track_number: int = 1):
+        super().__init__(parent)
+
         self.r_frame = VideoNode() #Root frame
         self.track_number = track_number
 
@@ -28,6 +31,12 @@ class VideoTrack:
 
     def prev_frame(self):
         return self.r_frame.prev
+    
+    def paintEvent(self, event):
+        qp = QPainter(self)
+        qp.setPen(QPen(QColor(255, 0, 0), 5))
+        qp.drawEllipse(50, 50, 300, 200)
+        qp.end()
     
     """
     Insert clip based on starting position
@@ -97,8 +106,8 @@ class VideoExerpt:
         self.tracks = sorted(self.tracks, key=lambda x: x.track_number)
         self.splintered_render = None
 
-        self.splinter_function = splinter.splinter_functions[filetype]
-        assert isinstance(self.splinter_function, SplinterFunction), "self.splinter_function is not an instance of SplinterFunction"
+        # self.splinter_function = splinter.splinter_functions[filetype]
+        # assert isinstance(self.splinter_function, SplinterFunction), "self.splinter_function is not an instance of SplinterFunction"
 
         pass
 
@@ -106,7 +115,7 @@ class VideoExerpt:
         self.splinter_function.run(self.tracks)
 
     def save_splintered_render(self):
-        assert(isinstance(self.splintered_render, splinter.SplinteredRender), f"Expected type 'splinter.SplinteredRender', got {type(self.splintered_render)}")
+        # assert(isinstance(self.splintered_render, splinter.SplinteredRender), f"Expected type 'splinter.SplinteredRender', got {type(self.splintered_render)}")
         pass
 
     def add_subtitles(self):

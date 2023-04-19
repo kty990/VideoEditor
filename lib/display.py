@@ -13,8 +13,7 @@ from lib import project
 
 FILE_TYPES = [
     ("Project", f"*{project.PROJECT_FILETYPE}"),
-    ("mp4", f"*.mp4"),
-    ("Text Files", f"*.txt")
+    ("All Files", f"*")
 ]
 
 class Application(QMainWindow):
