@@ -84,17 +84,22 @@ class Application(QMainWindow):
         qTopLayout.addWidget(previewWindow_widget)
         qTopLayout.addWidget(attributesWindow_widget)
         qTopLayout.addWidget(settingsWindow_widget)
-        top = QDockWidget("<project-name>",self)
+        self.top = QDockWidget("<project-name>",self)
+
+        self.index_main.NEW_PROJECT_OPENED.add_handler(self.SetTitle)
         top_qWidget = QWidget()
         top_qWidget.setLayout(qTopLayout)
-        top.setWidget(top_qWidget)
-        self.addDockWidget(Qt.TopDockWidgetArea,top)
+        self.top.setWidget(top_qWidget)
+        self.addDockWidget(Qt.TopDockWidgetArea,self.top)
         self.addDockWidget(Qt.BottomDockWidgetArea, dock2)
 
         # Set the window title, geometry, and show the main window
         self.setWindowTitle('Video Editor')
         self.setGeometry(300, 300, 1000, 750)
         self.show()
+
+    def SetTitle(self, title: str = "<project-name>"):
+        self.top.setWindowTitle(title.split("/")[-1])
 
     def open_file(self):
         options = QFileDialog.Options()
