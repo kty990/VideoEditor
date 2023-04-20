@@ -59,24 +59,14 @@ class Application(QMainWindow):
         attributesWindow_layout.addWidget(self.attributesWindow_contents)
         attributesWindow_widget = QWidget()
         attributesWindow_widget.setLayout(attributesWindow_layout)
-
-        attributesWindow_widget.setStyleSheet("""
-            QWidget {
-                background-color: #ffcc7d;
-            }
-        """)
+        attributesWindow_widget.setObjectName("top_widget")
 
         settingsWindow_contents = QTextEdit()
         settingsWindow_layout = QVBoxLayout()
         settingsWindow_layout.addWidget(settingsWindow_contents)
         settingsWindow_widget = QWidget()
+        settingsWindow_widget.setObjectName("top_widget")
         settingsWindow_widget.setLayout(settingsWindow_layout)
-
-        settingsWindow_widget.setStyleSheet("""
-            QWidget {
-                background-color: #7dccff;
-            }
-        """)
 
         # Create another QDockWidget with a QVBoxLayout
         dock2 = QDockWidget("Tracks", self)

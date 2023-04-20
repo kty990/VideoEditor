@@ -18,13 +18,6 @@ class PreviewWindow:
         self.canvas = QtWidgets.QLabel(parent or None)
         # self.canvas.resize(800, 600)
 
-
-        self.canvas.setStyleSheet("""
-            QLabel {
-                background-color: #007dff;
-            }
-        """)
-
         self.video_source = video_source
         self.current_playback = None
     
