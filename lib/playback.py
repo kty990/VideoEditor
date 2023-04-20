@@ -11,9 +11,8 @@ class Time:
         self.hours = hours
 
 class VideoNode:
-    def __init__(self, frame=None, audio=None, next=None, prev=None):
+    def __init__(self, frame=None, next=None, prev=None):
         self.frame = frame
-        self.audio = audio
         self.next = next
         self.prev = prev
         self.start_time = Time(0,0,0)
@@ -43,9 +42,9 @@ class VideoTrack(QWidget):
     - Moves other clips to make room for said clip
     - Handles frame setting (audio and video)
     """
-    def insert(self, start: Time = None, frame=None, audio=None):
+    def insert(self, start: Time = None, frame=None):
         # Create a new node with the given frame and audio
-        new_node = VideoNode(frame=frame, audio=audio)
+        new_node = VideoNode(frame=frame)
         
         # If the root node is empty, set it to the new node
         if not self.r_frame.frame:

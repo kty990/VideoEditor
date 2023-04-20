@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QAction, QDockWidget, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QAction, QDockWidget, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog, QSplitter
 from PyQt5.QtCore import Qt
 
 # Get the parent directory of the current file
@@ -10,6 +10,7 @@ parent_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(parent_dir)
 
 from lib import project
+from lib import playback
 
 FILE_TYPES = [
     ("Project", f"*{project.PROJECT_FILETYPE}"),
@@ -18,10 +19,11 @@ FILE_TYPES = [
 
 class Application(QMainWindow):
 
-    def __init__(self, app):
+    def __init__(self, app, index_main):
         super().__init__()
 
         self.app = app
+        self.index_main = index_main
 
         self.initUI()
 
@@ -35,23 +37,57 @@ class Application(QMainWindow):
         file_menu.addAction(open_action)
 
         # Create a QTextEdit widget
-        textEdit = QTextEdit()
-        self.setCentralWidget(textEdit)
+        # textEdit = QTextEdit()
+        # self.setCentralWidget(textEdit)
+
+        qTopLayout = QHBoxLayout()
 
         # Create a QDockWidget with a QVBoxLayout
-        dock1 = QDockWidget("Dockable", self)
-        dock1.setFeatures(QDockWidget.DockWidgetFloatable | QDockWidget.DockWidgetMovable)
-        dock1_contents = QTextEdit()
-        dock1_layout = QVBoxLayout()
-        dock1_layout.addWidget(dock1_contents)
-        dock1_widget = QWidget()
-        dock1_widget.setLayout(dock1_layout)
-        dock1.setWidget(dock1_widget)
+        # previewWindow = QDockWidget("Preview", self)
+        # previewWindow.setFeatures(QDockWidget.DockWidgetFloatable | QDockWidget.DockWidgetMovable)
+        previewWindow_contents = QTextEdit()
+        previewWindow_layout = QVBoxLayout()
+        previewWindow_layout.addWidget(previewWindow_contents)
+        previewWindow_widget = QWidget()
+        previewWindow_widget.setLayout(previewWindow_layout)
+        # previewWindow.setWidget(previewWindow_widget)
+
+        # attributesWindow = QDockWidget("Properties", self)
+        # attributesWindow.setFeatures(QDockWidget.DockWidgetFloatable | QDockWidget.DockWidgetMovable)
+        self.attributesWindow_contents = QTextEdit()
+        attributesWindow_layout = QVBoxLayout()
+        attributesWindow_layout.addWidget(self.attributesWindow_contents)
+        attributesWindow_widget = QWidget()
+        attributesWindow_widget.setLayout(attributesWindow_layout)
+        # attributesWindow.setWidget(attributesWindow_widget)
+
+        # settingsWindow = QDockWidget("Project Settings", self)
+        # settingsWindow.setFeatures(QDockWidget.DockWidgetFloatable | QDockWidget.DockWidgetMovable)
+        settingsWindow_contents = QTextEdit()
+        settingsWindow_layout = QVBoxLayout()
+        settingsWindow_layout.addWidget(settingsWindow_contents)
+        settingsWindow_widget = QWidget()
+        settingsWindow_widget.setLayout(settingsWindow_layout)
+        # settingsWindow.setWidget(settingsWindow_widget)
 
         # Create another QDockWidget with a QVBoxLayout
-        dock2 = QDockWidget("Dockable 2", self)
+        dock2 = QDockWidget("Tracks", self)
         dock2.setFeatures(QDockWidget.DockWidgetFloatable | QDockWidget.DockWidgetMovable)
-        dock2_contents = QTextEdit()
+        dock2_contents = QSplitter(Qt.Vertical)
+        dock2_contents.setStyleSheet("""
+            QSplitter::handle:horizontal {
+                background-color: #ccffff;
+            }
+            QSplitter::handle:vertical {
+                background-color: black;
+            }
+        """)
+
+        for xc in range(3):
+            v = playback.VideoTrack()
+            dock2_contents.addWidget(v)
+            # v.paint()
+        
         dock2_layout = QVBoxLayout()
         dock2_layout.addWidget(dock2_contents)
         dock2_widget = QWidget()
@@ -59,8 +95,15 @@ class Application(QMainWindow):
         dock2.setWidget(dock2_widget)
 
         # Add the dock widgets to the main window
-        self.addDockWidget(Qt.LeftDockWidgetArea, dock1)
-        self.addDockWidget(Qt.RightDockWidgetArea, dock2)
+        qTopLayout.addWidget(previewWindow_widget)
+        qTopLayout.addWidget(attributesWindow_widget)
+        qTopLayout.addWidget(settingsWindow_widget)
+        top = QDockWidget("<project-name>",self)
+        top_qWidget = QWidget()
+        top_qWidget.setLayout(qTopLayout)
+        top.setWidget(top_qWidget)
+        self.addDockWidget(Qt.TopDockWidgetArea,top)
+        self.addDockWidget(Qt.BottomDockWidgetArea, dock2)
 
         # Set the window title, geometry, and show the main window
         self.setWindowTitle('Video Editor')
@@ -75,11 +118,6 @@ class Application(QMainWindow):
             ss += f"{x[0]} ({x[1]});;"
         file_name, _ = QFileDialog.getOpenFileName(self,"Select a file", "",ss, options=options)
         if file_name:
+            self.index_main.NEW_PROJECT_OPENED.fire(file_name)
             with open(file_name, 'r') as file:
-                self.centralWidget().setPlainText(file.read())
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = Application(app)
-    sys.exit(app.exec_())
+                self.attributesWindow_contents.setPlainText(file.read())

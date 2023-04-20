@@ -1,5 +1,6 @@
 PROJECT_FILETYPE = ".vproj"
 from lib.event import Event
+from lib import playback
 
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
@@ -12,8 +13,6 @@ def ProjectError(error: str = "An error has occured!"):
     error_box.exec_()
 
     
-
-
 class Project:
     def __init__(self, project_name: str = None):
         if project_name == "":
@@ -23,16 +22,12 @@ class Project:
         self.splintered_renders = [] #Type = splinter.SplinterFunction
         self.ON_PROJ_CLOSE = Event()
 
-        
-
 
     def __repr__(self):
         return self.__str__()
     
     def __str__(self):
         return f"<< Project >>\nName: {self.name}"
-
-
 
     """
     Reads a project

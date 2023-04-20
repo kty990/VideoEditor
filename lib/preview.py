@@ -12,20 +12,12 @@ import threading
 from lib import tempfile
 
 class PreviewWindow:
-    def __init__(self, video_source: str = None):
+    def __init__(self, parent, video_source: str = None):
         # Create the main application window
-        self.app = QtWidgets.QApplication([])
-        self.window = QtWidgets.QMainWindow()
-        self.window.resize(800, 600)
-        self.window.setWindowTitle("Preview Window")
-
-        # Create a widget to contain the video canvas
-        self.central_widget = QtWidgets.QWidget()
-        self.window.setCentralWidget(self.central_widget)
-
+        
         # Create a canvas that can fit the above video source size
-        self.canvas = QtWidgets.QLabel(self.central_widget)
-        self.canvas.resize(800, 600)
+        self.canvas = QtWidgets.QLabel(parent or None)
+        # self.canvas.resize(800, 600)
 
         self.video_source = video_source
         self.current_playback = None
