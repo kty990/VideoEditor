@@ -3,6 +3,8 @@
 This is a simple video editor GUI built using the `PyQt5` library. It allows you to open, save, and edit video files.
 The aim of this project is to create a robust-ish video editor that is free and open source (following the MIT license).
 
+![preview_v0 0 1](https://user-images.githubusercontent.com/41134070/233322664-355ed4bf-cd57-468e-acd5-faf1bc7bd3ee.png)
+
 ## Dependencies
 
 This program has the following dependencies:
