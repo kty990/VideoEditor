@@ -18,6 +18,7 @@ from lib.event import Event
 class Main:
     def __init__(self):
         self.NEW_PROJECT_OPENED = Event()
+        self.NEW_PROJECT_CREATED = Event()
         self.proj = None
         self.q_app = QApplication(sys.argv)
         palette = QPalette()

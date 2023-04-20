@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QAction, QDockWidget, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog, QSplitter
+from PyQt5.QtWidgets import QMessageBox, QMainWindow, QTextEdit, QAction, QDockWidget, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog, QSplitter
 from PyQt5.QtCore import Qt
 
 # Get the parent directory of the current file
@@ -16,6 +16,14 @@ FILE_TYPES = [
     ("Project", f"*{project.PROJECT_FILETYPE}"),
     ("All Files", f"*")
 ]
+
+def DisplayError(error: str = "An error has occured!"):
+    error_box = QMessageBox()
+    error_box.setIcon(QMessageBox.Critical)
+    error_box.setWindowTitle("Error")
+    error_box.setText(error)
+    error_box.setStandardButtons(QMessageBox.Ok)
+    error_box.exec_()
 
 class Application(QMainWindow):
 
@@ -34,6 +42,11 @@ class Application(QMainWindow):
         file_menu = menubar.addMenu('File')
         open_action = QAction('Open', self)
         open_action.triggered.connect(self.open_file)
+        
+
+        new_action = QAction('New',self)
+        new_action.triggered.connect(self.new_file)
+        file_menu.addAction(new_action)
         file_menu.addAction(open_action)
 
         qTopLayout = QHBoxLayout()
@@ -112,3 +125,22 @@ class Application(QMainWindow):
             self.index_main.NEW_PROJECT_OPENED.fire(file_name)
             with open(file_name, 'r') as file:
                 self.attributesWindow_contents.setPlainText(file.read())
+
+    def new_file(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        ss = ""
+        for x in FILE_TYPES:
+            ss += f"{x[0]} ({x[1]});;"
+        file_name, _ = QFileDialog.getSaveFileName(self, "Create a file", "", ss, options=options)
+        if file_name:
+            basename, extension = os.path.splitext(file_name)
+            if not extension:
+                file_name = file_name + project.PROJECT_FILETYPE
+            self.index_main.NEW_PROJECT_CREATED.fire(file_name)
+            self.index_main.NEW_PROJECT_OPENED.fire(file_name)
+            try:
+                with open(file_name, 'x') as file:
+                    pass
+            except Exception as e:
+                DisplayError(f"Unable to create file. If you feel this is incorrect contact the development team.")
