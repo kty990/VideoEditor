@@ -2,9 +2,8 @@ import cv2
 import os
 from PIL import Image, ImageQt
 
-from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtCore import QUrl, Qt
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtMultimedia import QMediaPlayer
 
 from pydub import AudioSegment
 from pydub.playback import play
@@ -18,6 +17,13 @@ class PreviewWindow:
         # Create a canvas that can fit the above video source size
         self.canvas = QtWidgets.QLabel(parent or None)
         # self.canvas.resize(800, 600)
+
+
+        self.canvas.setStyleSheet("""
+            QLabel {
+                background-color: #007dff;
+            }
+        """)
 
         self.video_source = video_source
         self.current_playback = None
@@ -36,9 +42,6 @@ class PreviewWindow:
         # Open video source
         self.vid = cv2.VideoCapture(self.video_source)
         self.fps = self.vid.get(cv2.CAP_PROP_FPS)
-
-        # Open audio source
-        self.audio = AudioSegment.from_file(self.video_source, format="mp4")
         
         def foo():
             temp_file = tempfile.NamedTemporaryFile(suffix='.wav', delete=False, dir='./', subdir=self.temp_dir.folder_name)

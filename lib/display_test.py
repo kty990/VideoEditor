@@ -2,6 +2,7 @@ import sys
 import os
 from PyQt5.QtWidgets import QMessageBox, QMainWindow, QTextEdit, QAction, QDockWidget, QWidget, QVBoxLayout, QHBoxLayout, QFileDialog, QSplitter
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 
 # Get the parent directory of the current file
 parent_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
@@ -33,6 +34,8 @@ class Application(QMainWindow):
         self.app = app
         self.index_main = index_main
 
+        self.setWindowIcon(QIcon('./res/icon.ico'))
+
         self.initUI()
 
     def initUI(self):
@@ -49,13 +52,7 @@ class Application(QMainWindow):
         file_menu.addAction(new_action)
         file_menu.addAction(open_action)
 
-        qTopLayout = QHBoxLayout()
-
-        previewWindow_contents = QTextEdit()
-        previewWindow_layout = QVBoxLayout()
-        previewWindow_layout.addWidget(previewWindow_contents)
-        previewWindow_widget = QWidget()
-        previewWindow_widget.setLayout(previewWindow_layout)
+        self.qTopLayout = QHBoxLayout()
 
         self.attributesWindow_contents = QTextEdit()
         attributesWindow_layout = QVBoxLayout()
@@ -63,15 +60,27 @@ class Application(QMainWindow):
         attributesWindow_widget = QWidget()
         attributesWindow_widget.setLayout(attributesWindow_layout)
 
+        attributesWindow_widget.setStyleSheet("""
+            QWidget {
+                background-color: #ffcc7d;
+            }
+        """)
+
         settingsWindow_contents = QTextEdit()
         settingsWindow_layout = QVBoxLayout()
         settingsWindow_layout.addWidget(settingsWindow_contents)
         settingsWindow_widget = QWidget()
         settingsWindow_widget.setLayout(settingsWindow_layout)
 
+        settingsWindow_widget.setStyleSheet("""
+            QWidget {
+                background-color: #7dccff;
+            }
+        """)
+
         # Create another QDockWidget with a QVBoxLayout
         dock2 = QDockWidget("Tracks", self)
-        dock2.setFeatures(QDockWidget.DockWidgetFloatable | QDockWidget.DockWidgetMovable)
+        dock2.setFeatures(QDockWidget.DockWidgetMovable)
         dock2_contents = QSplitter(Qt.Vertical)
         dock2_contents.setStyleSheet("""
             QSplitter::handle:horizontal {
@@ -94,14 +103,20 @@ class Application(QMainWindow):
         dock2.setWidget(dock2_widget)
 
         # Add the dock widgets to the main window
-        qTopLayout.addWidget(previewWindow_widget)
-        qTopLayout.addWidget(attributesWindow_widget)
-        qTopLayout.addWidget(settingsWindow_widget)
+        self.qTopLayout.addWidget(attributesWindow_widget)
+        self.qTopLayout.addWidget(settingsWindow_widget)
+
+        self.qTopLayout.setStretchFactor(attributesWindow_widget, 1)
+        self.qTopLayout.setStretchFactor(settingsWindow_widget, 1)
+
+
         self.top = QDockWidget("<project-name>",self)
+        self.top.setFeatures(QDockWidget.DockWidgetMovable)
+        
 
         self.index_main.NEW_PROJECT_OPENED.add_handler(self.SetTitle)
         top_qWidget = QWidget()
-        top_qWidget.setLayout(qTopLayout)
+        top_qWidget.setLayout(self.qTopLayout)
         self.top.setWidget(top_qWidget)
         self.addDockWidget(Qt.TopDockWidgetArea,self.top)
         self.addDockWidget(Qt.BottomDockWidgetArea, dock2)

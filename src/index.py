@@ -44,7 +44,9 @@ class Main:
             }
         """)
         self.app = display_test.Application(self.q_app, self)
-        self.pWindow = preview.PreviewWindow(getattr(self.app,"pw_top",None))
+        self.pWindow = preview.PreviewWindow(self.app.top)
+        self.app.qTopLayout.insertWidget(1,self.pWindow.canvas)
+        self.app.qTopLayout.setStretchFactor(self.pWindow.canvas, 1)
 
         def cleanup(p):
             tempfile.mass_cleanup()
