@@ -1,6 +1,6 @@
 # Video Editor
 
-This is a simple video editor GUI built using Python's `tkinter` library. It allows you to open, save, and edit video files.
+This is a simple video editor GUI built using the `PyQt5` library. It allows you to open, save, and edit video files.
 The aim of this project is to create a robust-ish video editor that is free and open source (following the MIT license).
 
 ## Dependencies
