@@ -8,7 +8,7 @@ The aim of this project is to create a robust-ish video editor that is free and 
 This program has the following dependencies:
 
 - Python 3
-- tkinter
+- PyQt5
 - pickle
 
 ## Usage
