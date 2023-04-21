@@ -4,40 +4,31 @@ from pydub.playback import play
 from lib import playback, display, project
 
 if __name__ == "__main__":
+    exit(-1)
     """EVERYTHING AFTER THIS POINT WILL BE USED EVENTUALLY"""
-    # Create a VideoCapture object to read the video file
-    cap = cv2.VideoCapture('video_file.mp4')
+    
+    """USED TO STORE FRAMES AS 2D arrays (BGR not RGB)"""
+    import cv2
 
-    # Read the audio file using PyDub
-    audio = AudioSegment.from_file('audio_file.mp3', format='mp3')
+    # Open the video file
+    cap = cv2.VideoCapture('path/to/video/file.mp4')
 
-    # Create a window to display the video
-    cv2.namedWindow('video', cv2.WINDOW_NORMAL)
+    # Read the first frame
+    ret, frame = cap.read()
 
-    # Loop through the frames of the video
-    while True:
-        # Check if the frame was successfully read
-        if not ret:
-            break
-        
-        # Display the current frame in the window
-        cv2.imshow('video', frame)
-        
-        # Play the audio corresponding to the current frame
-        t1 = cap.get(cv2.CAP_PROP_POS_MSEC) # current frame time in milliseconds
-        t2 = t1 + 33.33 # duration of a frame in milliseconds
-        play(audio[t1:t2])
-        
-        # Wait for a key press and check if the user wants to exit
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        
-        # Read the next frame of the video
+    # Loop through the video frames
+    while ret:
+        # Store the BGR frame as a 3D array
+        # (assuming the video has a resolution of 640x480)
+        frame_array = frame.reshape(480, 640, 3)
+
+        # Do something with the frame array (e.g. save it to a file)
+
+        # Read the next frame
         ret, frame = cap.read()
 
-    # Release the VideoCapture object and close the window
+    # Release the video capture object
     cap.release()
-    cv2.destroyAllWindows()
 
 
 
