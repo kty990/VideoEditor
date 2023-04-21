@@ -21,6 +21,7 @@ FILE_TYPES = [
 def DisplayError(error: str = "An error has occured!"):
     error_box = QMessageBox()
     error_box.setIcon(QMessageBox.Critical)
+    error_box.setWindowIcon(QIcon('./res/icon.ico'))
     error_box.setWindowTitle("Error")
     error_box.setText(error)
     error_box.setStandardButtons(QMessageBox.Ok)
@@ -127,6 +128,10 @@ class Application(QMainWindow):
             ss += f"{x[0]} ({x[1]});;"
         file_name, _ = QFileDialog.getOpenFileName(self,"Select a file", "",ss, options=options)
         if file_name:
+            basename, extension = os.path.splitext(file_name)
+            if extension != project.PROJECT_FILETYPE:
+                DisplayError(f"Unable to create project file. Invalid file extension used.")
+                return
             self.index_main.NEW_PROJECT_OPENED.fire(file_name)
             with open(file_name, 'r') as file:
                 self.attributesWindow_contents.setPlainText(file.read())
@@ -142,6 +147,9 @@ class Application(QMainWindow):
             basename, extension = os.path.splitext(file_name)
             if not extension:
                 file_name = file_name + project.PROJECT_FILETYPE
+            elif extension != project.PROJECT_FILETYPE:
+                DisplayError(f"Unable to create project file. Invalid file extension used.")
+                return
             self.index_main.NEW_PROJECT_CREATED.fire(file_name)
             self.index_main.NEW_PROJECT_OPENED.fire(file_name)
             try:

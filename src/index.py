@@ -22,14 +22,14 @@ class Main:
         self.proj = None
         self.q_app = QApplication(sys.argv)
         palette = QPalette()
-        palette.setColor(QPalette.WindowText, QColor(50,255,145))
+        palette.setColor(QPalette.WindowText, QColor(0,0,0))
         self.q_app.setPalette(palette)
         self.q_app.setStyleSheet("""
             QDockWidget {
                 background-color: #7d7d7d;
                 padding: 0;
                 margin: 0;
-                color: white;
+                color: #ffffff;
                 font-size: 18px;
                 padding: 0;
                 margin: 0;
@@ -44,21 +44,16 @@ class Main:
                 border-width: 1px;
             }
 
-            QHBoxLayout {
-                border-color: #ffffff;
-                border-style: inset;
-                border-width: 100px;
-            }
-
             QMainWindow {
                 padding: 0;
                 margin: 0;
+                background-color: #000000;
             }
 
             QSplitter {
                 background-color: #c8c8c8;
                 color: black;
-                border-color: black;
+                border-color: #000000;
                 border-style: inset;
                 border-width: 1px;
                 border-radius: 25px;

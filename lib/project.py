@@ -3,10 +3,12 @@ from lib.event import Event
 from lib import playback
 
 from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtGui import QIcon
 
 def ProjectError(error: str = "An error has occured!"):
     error_box = QMessageBox()
     error_box.setIcon(QMessageBox.Critical)
+    error_box.setWindowIcon(QIcon('./res/icon.ico'))
     error_box.setWindowTitle("Error")
     error_box.setText(error)
     error_box.setStandardButtons(QMessageBox.Ok)
