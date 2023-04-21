@@ -10,6 +10,18 @@ class Time:
         self.minutes = minutes
         self.hours = hours
 
+class Video:
+    def __init__(self):
+        self.frames = []
+
+    def add_frame(self, frame=None):
+        assert(frame != None, "Can't add a frame of type 'None'")
+        self.frames.append(frame)
+
+    def remove_frame(self, frame):
+        self.frames.remove(frame)
+
+
 class VideoNode:
     def __init__(self, frame=None, next=None, prev=None):
         self.frame = frame
